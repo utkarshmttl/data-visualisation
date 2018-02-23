@@ -16,11 +16,12 @@
         var width = 1500;
         var height = 1500;
         var twoPi = 2 * Math.PI;
-        var curvePercent = new Array(60).fill(1/60);
+        var divisions = 24
+        var curvePercent = new Array(divisions).fill(1/divisions);
 
         var temperatures = new Array(2);
-        temperatures[0] = Array.apply(null, Array(60)).map(function (_, i) {return i+1;});
-        temperatures[1] = Array.apply(null, Array(60)).map(function (_, i) {return 60-i;});
+        temperatures[0] = Array.apply(null, Array(divisions)).map(function (_, i) {return i+1;});
+        temperatures[1] = Array.apply(null, Array(divisions)).map(function (_, i) {return divisions-i;});
 
 
 
@@ -48,7 +49,7 @@
             .data(curvePercent)
           .enter().append("path")
             .each(arcFunction)
-            .style("fill", function(d, i) { return getColor(temperatures[day][i]/60);});
+            .style("fill", function(d, i) { return getColor(temperatures[day][i]/divisions);});
 
 
         }
