@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style type="text/css">
+    body {
+        font-size: 100%;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+</style>
+<body>
+    <div id="donut-charts"></div>
+
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+
+    <script>
+        var width = 1500;
+        var height = 1500;
+        var twoPi = 2 * Math.PI;
+        var curvePercent = new Array(60).fill(1/60);
+
+        var temperatures = new Array(2);
+        temperatures[1] = Array.apply(null, Array(60)).map(function (_, i) {return i+1;});
+        temperatures[2] = Array.apply(null, Array(60)).map(function (_, i) {return 60-i;});
+
+      
+
+
+        // Appending SVG to the body
+        var svg = d3.select("body").append("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+        // Arc for paths surrounding the pie chart.
+        var pathArc = d3.svg.arc()
+        .innerRadius(100)
+        .outerRadius(103);
+
+        // Curved paths surrounding the pie chart g (groups) container.
+        var curves = svg.append("g")
+        .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+        // Appending the curve path endAngle to show percentage of data[curvePercent]
+        curves.selectAll("path")
+            .data(curvePercent)
+          .enter().append("path")
+            .each(arcFunction)
+            .style("fill", function(d, i) { return getColor(temperatures[1][i]/60);});
+
+        // Function called for each path appended to increase scale and iterate.
+        function arcFunction(d, i){
+            return d3.select(this)
+                    .attr("d", pathArc.startAngle(i * twoPi * d))
+                    .attr("d", pathArc.endAngle((i+1)*d*twoPi));
+        }
+
+        function getColor(value){
+            //value from 0 to 1
+            var hue=((1-value)*240).toString(10);
+            return ["hsl(",hue,",100%,50%)"].join("");
+        }
+    </script>
+
+</body>
