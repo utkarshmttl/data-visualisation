@@ -19,10 +19,10 @@
         var curvePercent = new Array(60).fill(1/60);
 
         var temperatures = new Array(2);
-        temperatures[1] = Array.apply(null, Array(60)).map(function (_, i) {return i+1;});
-        temperatures[2] = Array.apply(null, Array(60)).map(function (_, i) {return 60-i;});
+        temperatures[0] = Array.apply(null, Array(60)).map(function (_, i) {return i+1;});
+        temperatures[1] = Array.apply(null, Array(60)).map(function (_, i) {return 60-i;});
 
-      
+
 
 
         // Appending SVG to the body
@@ -30,10 +30,14 @@
         .attr("width", width)
         .attr("height", height);
 
+        for(day = 0; day < 2; day++){
+
+
+
         // Arc for paths surrounding the pie chart.
         var pathArc = d3.svg.arc()
-        .innerRadius(100)
-        .outerRadius(103);
+        .innerRadius(100 + day*3)
+        .outerRadius(100 + (day+1)*3);
 
         // Curved paths surrounding the pie chart g (groups) container.
         var curves = svg.append("g")
@@ -44,7 +48,10 @@
             .data(curvePercent)
           .enter().append("path")
             .each(arcFunction)
-            .style("fill", function(d, i) { return getColor(temperatures[1][i]/60);});
+            .style("fill", function(d, i) { return getColor(temperatures[day][i]/60);});
+
+
+        }
 
         // Function called for each path appended to increase scale and iterate.
         function arcFunction(d, i){
