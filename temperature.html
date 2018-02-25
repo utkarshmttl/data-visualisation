@@ -11,6 +11,7 @@
 
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
 
     <script>
         var width = 1500;
@@ -18,6 +19,17 @@
         var twoPi = 2 * Math.PI;
         var divisions = 24
         var curvePercent = new Array(divisions).fill(1/divisions);
+
+        var dateArray = getDates("20170101","20171231");
+        var getData;
+
+        $.get(
+            "https://www.timeanddate.com/scripts/cityajax.php?n=india/new-delhi&mode=historic&hd=20170201&month=2&year=2017&json=1",
+            function(data) {
+               console.log('page content: ' + data);
+               getData = data;
+            }
+        );
 
         var temperatures = new Array(2);
         temperatures[0] = Array.apply(null, Array(divisions)).map(function (_, i) {return i+1;});
@@ -65,6 +77,17 @@
             //value from 0 to 1
             var hue=((1-value)*240).toString(10);
             return ["hsl(",hue,",100%,50%)"].join("");
+        }
+
+        function getDates(startDate, stopDate) {
+            var dateArray = [];
+            var currentDate = moment(startDate);
+            var stopDate = moment(stopDate);
+            while (currentDate <= stopDate) {
+                dateArray.push( moment(currentDate).format('YYYYMMDD') )
+                currentDate = moment(currentDate).add(1, 'days');
+            }
+            return dateArray;
         }
     </script>
 
