@@ -22,7 +22,7 @@
         html { font-size: 62.5%; }
 
     		body {
-            /* background-color: #eee; */
+            background-color: #eee;
     		  	font-size: 1.6rem;
     		  	font-family: 'Open Sans', sans-serif;
     		  	font-weight: 300;
@@ -113,12 +113,12 @@
 
         var legendWidth = width * 0.6,
         legendHeight = 10,
-        divisions = 45;
+        divisions = 90;
 
         var newData = [];
 var sectionWidth = legendWidth/divisions;
 
-for (var i=4; i < 49; i+= 1 ) {
+for (var i=4; i < 49; i+= 0.5 ) {
     newData.push(i);
 }
 
