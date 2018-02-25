@@ -1,33 +1,76 @@
 <!DOCTYPE html>
-<meta charset="utf-8">
-<link rel="stylesheet" type="text/css" href="tooltipster/dist/css/tooltipster.bundle.min.css" />
-<style type="text/css">
-    body {
-        font-size: 100%;
-        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    }
-</style>
-
-<body>
-    <div id="donut-charts"></div>
-
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="tooltipster/dist/css/tooltipster.bundle.min.css" />
+    <!-- Google Font -->
+	  <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700' rel='stylesheet' type='text/css'>
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
     <script type="text/javascript" src="tooltipster/dist/js/tooltipster.bundle.min.js"></script>
     <script>
-            $(document).ready(function() {
-                $('.tooltip').tooltipster({
-   delay: 10,
-   animationDuration: 10
-});
+        $(document).ready(function() {
+            $('.tooltip').tooltipster({
+                delay: 10,
+                animationDuration: 10
+        });
             });
-        </script>
+    </script>
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
+    <style type="text/css">
+
+        html { font-size: 62.5%; }
+
+    		body {
+            /* background-color: #eee; */
+    		  	font-size: 1.6rem;
+    		  	font-family: 'Open Sans', sans-serif;
+    		  	font-weight: 300;
+    		  	fill: #7A7A7A;
+    		  	text-align: center;
+    		}
+
+    	    .title {
+    	      font-size: 3.6rem;
+    	      fill: #4F4F4F;
+    	      font-weight: 300;
+    	      text-anchor: middle;
+    	    }
+
+    	    .subtitle {
+    	      font-size: 1.6rem;
+    	      fill: #AAAAAA;
+    	      font-weight: 300;
+    	      text-anchor: middle;
+    	    }
+
+    	    .legendTitle {
+    	        text-anchor: middle;
+    	        font-size: 2.2rem;
+    	        fill: #4F4F4F;
+    	        font-weight: 300;
+    	    }
+
+    	  	.axis path,
+    	  	.axis tick,
+    	    .axis line {
+    	  		fill: none;
+    	  		stroke: none;
+    	  	}
+    </style>
+</head>
+
+<body>
+    <div id="title"></div>
+    <div id="chart"></div>
+    <div id="legend"></div>
+
+
     <script src="js_temp_arrays_2017_newDelhi.js"></script>
 
     <script>
-        var width = 1500;
-        var height = 900;
+        var width = 930;
+        var height = 930;
         var twoPi = 2 * Math.PI;
         var divisions = 48
         var curvePercent = new Array(divisions).fill(1/divisions);
@@ -36,27 +79,109 @@
 
         var dateArray = getDates("20170101","20171231");
         var timeArray = ['12:00 AM','12:30 AM','1:00 AM','1:30 AM','2:00 AM','2:30 AM','3:00 AM','3:30 AM','4:00 AM','4:30 AM','5:00 AM','5:30 AM','6:00 AM','6:30 AM','7:00 AM','7:30 AM','8:00 AM','8:30 AM','9:00 AM','9:30 AM','10:00 AM','10:30 AM','11:00 AM','11:30 AM','12:00 PM','12:30 PM','1:00 PM','1:30 PM','2:00 PM','2:30 PM','3:00 PM','3:30 PM','4:00 PM','4:30 PM','5:00 PM','5:30 PM','6:00 PM','6:30 PM','7:00 PM','7:30 PM','8:00 PM','8:30 PM','9:00 PM','9:30 PM','10:00 PM','10:30 PM','11:00 PM','11:30 PM'];
-        // var getData;
-
-        // $.get(
-        //     "https://www.timeanddate.com/scripts/cityajax.php?n=india/new-delhi&mode=historic&hd=20170201&month=2&year=2017&json=1",
-        //     function(data) {
-        //        console.log('page content: ' + data);
-        //        getData = data;
-        //     }
-        // );
-
-        // var temperatures = new Array(2);
-        // temperatures[0] = Array.apply(null, Array(divisions)).map(function (_, i) {return i+1;});
-        // temperatures[1] = Array.apply(null, Array(divisions)).map(function (_, i) {return divisions-i;});
-
-
-
 
         // Appending SVG to the body
-        var svg = d3.select("body").append("svg")
+        var svg = d3.select("#chart").append("svg")
         .attr("width", width)
         .attr("height", height);
+
+        var svgTitle = d3.select("#title").append("svg")
+        .attr("width", width)
+        .attr("height", "100%");
+
+        var svgLegend = d3.select("#legend").append("svg")
+        .attr("width", width)
+        .attr("height", "100%");
+
+        svgTitle.append("text")
+        	.attr("class", "title")
+            .attr("x", width/2)
+            .attr("y", "50%")
+            .text("2017 Hourly Weather in New Delhi, India");
+        svgTitle.append("text")
+        	.attr("class", "subtitle")
+            .attr("x", width/2)
+            .attr("y", "80%")
+            .text("Hover anywhere to see date, time and temperature.");
+        // svgTitle.append("text")
+        // 	.attr("class", "subtitle")
+        //     // .attr("x", width/2-10)
+        //     // .attr("y", -30)
+        //     .style("font-weight", 800)
+        //     .style("fill", "#676767")
+        //     .text("click anywhere to switch colors");
+
+        var legendWidth = width * 0.6,
+        legendHeight = 10,
+        divisions = 45;
+
+        var newData = [];
+var sectionWidth = legendWidth/divisions;
+
+for (var i=4; i < 49; i+= 1 ) {
+    newData.push(i);
+}
+
+// var colorScaleLin = d3.scale.linear()
+//       .domain([0, newData.length-1])
+//       .interpolate(d3.interpolateRgb)
+//       .range(['blue', 'red']);
+
+
+
+        //Color Legend container
+        var legendsvg = svgLegend.append("g")
+        	.attr("class", "legendWrapper")
+        	.attr("transform", "translate(" + (width/2) + "," + "50%" + ")");
+
+        // //Draw the Rectangle
+        // legendsvg.append("rect")
+        // 	.attr("class", "legendRect")
+        // 	.attr("x", 0.2*width)
+        // 	.attr("y", 50)
+        // 	//.attr("rx", legendHeight/2)
+        // 	.attr("width", legendWidth)
+        // 	.attr("height", legendHeight)
+        // 	.style("fill", function(d){
+        //     console.log(d);
+        //     return getColor(d);
+        //   });
+
+          legendsvg.selectAll('rect')
+    .data(newData)
+    .enter()
+    .append('rect')
+        .attr("x", function(d,i) { return i*sectionWidth + 0.2*width; })
+        .attr("y", 50)
+        .attr("height", legendHeight)
+        .attr("width", sectionWidth)
+        .attr('fill', function(d, i) { return getColor((d-4)/(48-4))});
+
+        //Append title
+        legendsvg.append("text")
+        	.attr("class", "legendTitle")
+        	.attr("x", width/2)
+        	.attr("y", 40)
+        	.text("Temp (°C)");
+
+        //Set scale for x-axis
+        var xScale = d3.scale.linear()
+        	 .range([0, legendWidth])
+        	 .domain([minTemp,maxTemp]);
+        	 //.domain([d3.min(pt.legendSOM.colorData)/100, d3.max(pt.legendSOM.colorData)/100]);
+
+        //Define x-axis
+        var xAxis = d3.svg.axis()
+        	  .orient("bottom")
+        	  .ticks(20)  //Set rough # of ticks
+        	  //.tickFormat(formatPercent)
+        	  .scale(xScale);
+
+        //Set up X axis
+        legendsvg.append("g")
+        	.attr("class", "axis")  //Assign "axis" class
+        	.attr("transform", "translate(" + (0.2*width) + "," + (65) + ")")
+        	.call(xAxis);
 
         for(day = 0; day < temperatures.length; day++){
 
@@ -89,7 +214,7 @@
                     .attr("d", pathArc.startAngle(i * twoPi * d))
                     .attr("d", pathArc.endAngle((i+1)*d*twoPi))
                     .attr("class", "tooltip")
-                    .attr("title", dateArray[day]+" - "+timeArray[i]+" - "+temperatures[day][i]+" °C");
+                    .attr("title", dateArray[day]+" "+timeArray[i]+" "+temperatures[day][i]+" °C");
         }
 
         function getColor(value){
@@ -111,3 +236,4 @@
     </script>
 
 </body>
+</html>
