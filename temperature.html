@@ -11,29 +11,32 @@
 
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script> -->
+    <script src="js_temp_arrays_2017_newDelhi.js"></script>
 
     <script>
         var width = 1500;
-        var height = 1500;
+        var height = 900;
         var twoPi = 2 * Math.PI;
-        var divisions = 24
+        var divisions = 48
         var curvePercent = new Array(divisions).fill(1/divisions);
+        var minTemp = 4;
+        var maxTemp = 48.3;
 
-        var dateArray = getDates("20170101","20171231");
-        var getData;
+        // var dateArray = getDates("20170101","20171231");
+        // var getData;
 
-        $.get(
-            "https://www.timeanddate.com/scripts/cityajax.php?n=india/new-delhi&mode=historic&hd=20170201&month=2&year=2017&json=1",
-            function(data) {
-               console.log('page content: ' + data);
-               getData = data;
-            }
-        );
+        // $.get(
+        //     "https://www.timeanddate.com/scripts/cityajax.php?n=india/new-delhi&mode=historic&hd=20170201&month=2&year=2017&json=1",
+        //     function(data) {
+        //        console.log('page content: ' + data);
+        //        getData = data;
+        //     }
+        // );
 
-        var temperatures = new Array(2);
-        temperatures[0] = Array.apply(null, Array(divisions)).map(function (_, i) {return i+1;});
-        temperatures[1] = Array.apply(null, Array(divisions)).map(function (_, i) {return divisions-i;});
+        // var temperatures = new Array(2);
+        // temperatures[0] = Array.apply(null, Array(divisions)).map(function (_, i) {return i+1;});
+        // temperatures[1] = Array.apply(null, Array(divisions)).map(function (_, i) {return divisions-i;});
 
 
 
@@ -43,14 +46,14 @@
         .attr("width", width)
         .attr("height", height);
 
-        for(day = 0; day < 2; day++){
+        for(day = 0; day < temperatures.length; day++){
 
 
 
         // Arc for paths surrounding the pie chart.
         var pathArc = d3.svg.arc()
-        .innerRadius(100 + day*3)
-        .outerRadius(100 + (day+1)*3);
+        .innerRadius(60 + day*1)
+        .outerRadius(60 + (day+1)*1);
 
         // Curved paths surrounding the pie chart g (groups) container.
         var curves = svg.append("g")
@@ -61,7 +64,9 @@
             .data(curvePercent)
           .enter().append("path")
             .each(arcFunction)
-            .style("fill", function(d, i) { return getColor(temperatures[day][i]/divisions);});
+            .style("fill", function(d, i) { return getColor((temperatures[day][i] - minTemp)/(maxTemp-minTemp));})
+            .append("svg:title")
+            .text(function(d, i) { return temperatures[day][i]; });
 
 
         }
@@ -79,16 +84,16 @@
             return ["hsl(",hue,",100%,50%)"].join("");
         }
 
-        function getDates(startDate, stopDate) {
-            var dateArray = [];
-            var currentDate = moment(startDate);
-            var stopDate = moment(stopDate);
-            while (currentDate <= stopDate) {
-                dateArray.push( moment(currentDate).format('YYYYMMDD') )
-                currentDate = moment(currentDate).add(1, 'days');
-            }
-            return dateArray;
-        }
+        // function getDates(startDate, stopDate) {
+        //     var dateArray = [];
+        //     var currentDate = moment(startDate);
+        //     var stopDate = moment(stopDate);
+        //     while (currentDate <= stopDate) {
+        //         dateArray.push( moment(currentDate).format('YYYYMMDD') )
+        //         currentDate = moment(currentDate).add(1, 'days');
+        //     }
+        //     return dateArray;
+        // }
     </script>
 
 </body>
