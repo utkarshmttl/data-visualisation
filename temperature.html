@@ -1,17 +1,28 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="tooltipster/dist/css/tooltipster.bundle.min.css" />
 <style type="text/css">
     body {
         font-size: 100%;
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     }
 </style>
+
 <body>
     <div id="donut-charts"></div>
 
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script type="text/javascript" src="tooltipster/dist/js/tooltipster.bundle.min.js"></script>
+    <script>
+            $(document).ready(function() {
+                $('.tooltip').tooltipster({
+   delay: 10,
+   animationDuration: 10
+});
+            });
+        </script>
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
     <script src="js_temp_arrays_2017_newDelhi.js"></script>
 
     <script>
@@ -23,7 +34,8 @@
         var minTemp = 4;
         var maxTemp = 48.3;
 
-        // var dateArray = getDates("20170101","20171231");
+        var dateArray = getDates("20170101","20171231");
+        var timeArray = ['12:00 AM','12:30 AM','1:00 AM','1:30 AM','2:00 AM','2:30 AM','3:00 AM','3:30 AM','4:00 AM','4:30 AM','5:00 AM','5:30 AM','6:00 AM','6:30 AM','7:00 AM','7:30 AM','8:00 AM','8:30 AM','9:00 AM','9:30 AM','10:00 AM','10:30 AM','11:00 AM','11:30 AM','12:00 PM','12:30 PM','1:00 PM','1:30 PM','2:00 PM','2:30 PM','3:00 PM','3:30 PM','4:00 PM','4:30 PM','5:00 PM','5:30 PM','6:00 PM','6:30 PM','7:00 PM','7:30 PM','8:00 PM','8:30 PM','9:00 PM','9:30 PM','10:00 PM','10:30 PM','11:00 PM','11:30 PM'];
         // var getData;
 
         // $.get(
@@ -64,9 +76,9 @@
             .data(curvePercent)
           .enter().append("path")
             .each(arcFunction)
-            .style("fill", function(d, i) { return getColor((temperatures[day][i] - minTemp)/(maxTemp-minTemp));})
-            .append("svg:title")
-            .text(function(d, i) { return temperatures[day][i]; });
+            .style("fill", function(d, i) { return getColor((temperatures[day][i] - minTemp)/(maxTemp-minTemp));});
+            // .append("svg:title")
+            // .text(function(d, i) { return day+"..."+i+"..."+temperatures[day][i]; });
 
 
         }
@@ -75,7 +87,9 @@
         function arcFunction(d, i){
             return d3.select(this)
                     .attr("d", pathArc.startAngle(i * twoPi * d))
-                    .attr("d", pathArc.endAngle((i+1)*d*twoPi));
+                    .attr("d", pathArc.endAngle((i+1)*d*twoPi))
+                    .attr("class", "tooltip")
+                    .attr("title", dateArray[day]+" - "+timeArray[i]+" - "+temperatures[day][i]+" °C");
         }
 
         function getColor(value){
@@ -84,16 +98,16 @@
             return ["hsl(",hue,",100%,50%)"].join("");
         }
 
-        // function getDates(startDate, stopDate) {
-        //     var dateArray = [];
-        //     var currentDate = moment(startDate);
-        //     var stopDate = moment(stopDate);
-        //     while (currentDate <= stopDate) {
-        //         dateArray.push( moment(currentDate).format('YYYYMMDD') )
-        //         currentDate = moment(currentDate).add(1, 'days');
-        //     }
-        //     return dateArray;
-        // }
+        function getDates(startDate, stopDate) {
+            var dateArray = [];
+            var currentDate = moment(startDate);
+            var stopDate = moment(stopDate);
+            while (currentDate <= stopDate) {
+                dateArray.push( moment(currentDate).format('YYYY/MM/DD') )
+                currentDate = moment(currentDate).add(1, 'days');
+            }
+            return dateArray;
+        }
     </script>
 
 </body>
