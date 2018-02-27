@@ -3,7 +3,10 @@ import urllib.request as ur
 from datetime import date, timedelta
 import re
 import sqlite3
-
+'''
+IMPORTANT NOTE: Make sure you have the appropriate db structure created before running this file.
+Use sqlite_queries.txt file to create the same.
+'''
 d1 = date(2017, 1, 1)  # start date
 d2 = date(2017, 12, 31)  # end date
 
