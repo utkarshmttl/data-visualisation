@@ -10,7 +10,7 @@
 
 1. [2017 Hourly Weather in New Delhi, India](#1-2017-hourly-weather-in-new-delhi-india)
   - [Description](#description)
-    - [Codepen](https://codepen.io/utkarshmttl/full/PQyWvG/)
+    - <a href="https://codepen.io/utkarshmttl/full/PQyWvG/" target="_blank">Codepen</a>
 
     - [Live Demo](https://utkarshmttl.github.io/data-visualisation/weather/) (for interactive tooltips)
   - [How I made this?](#how-i-made-this-)
