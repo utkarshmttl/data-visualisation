@@ -13,13 +13,13 @@
     - [Codepen](https://codepen.io/utkarshmttl/full/PQyWvG/)
 
     - [Live Demo](https://utkarshmttl.github.io/data-visualisation/weather/) (for interactive tooltips)
-  - [How I made this?](#how-i-made-this-)
+  - [How I made this?](#how-i-made-this)
   - [New Skills Acquired](#new-skills-acquired)
   - [Old Skills Practiced](#old-skills-practiced)
   - [Analysis](#analysis)
-  - [Questions?](#questions-)
+  - [Questions?](#questions)
 
-2. [Coming Soon...](#2-coming-soon-)
+2. [Coming Soon...](#2-coming-soon)
 
 3. [Authors](#authors)
 
